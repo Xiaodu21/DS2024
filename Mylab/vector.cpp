@@ -52,3 +52,47 @@ public:
 	void traverse(void (*) (&T));
 	template <typename VST> void traverse(VST&);
 }; 
+template <typename T>
+void Vector<T>::copyFrom(T const* A, Rank lo, Rank hi) {
+	_elem = new T[_capacity = 2 * (hi - lo)];size = 0;
+	while (lo < hi)
+		_elem[_size++] = A[lo++];
+}
+template <typename T> Vector<T>& Vector<T>::operator= (Vector<T> const& V) {
+	if (_elem) delete[] _elem;
+	copyFrom(V._elem, 0, V.size());
+	return *this;
+}
+template <typename T> void Vector<T>::expand() {
+	if (_size < _capacity) return;
+	if (_capacity < DEFAULT_CAPACITY) _capacity = DEFAULT_CAPACITY;
+	T* oldElem = _elem; _elem = new T[_capacity <<= 1];
+	for (int i = 0; i < size; i++)
+		_elem[i] = oldElem[i];
+	delete[] oldElem;
+}
+template <typename T> void Vector<T>::shrink() {
+	if (_capacity < DEFAULT_CAPACITY << 1) return;
+	if (_size << 2 > _capacity) return;
+	T* oldElem = _elem; _elem = new T[_capacity >>= 1];
+	for (int i = 0; i < _size; i++) _elem[i] = oldElem[i];
+	delete[] oldElem;
+}
+template <typename T> T& Vector<T>::operator[] (Rank r) const
+{
+	return _elem[r];
+}
+template <typename T> void permute(Vector<T>& V) {
+	for (int i = V.size; i > 0; i--)
+		swap(V[i - 1], V[rand() % i]);
+}
+template <typename T> void Vector<T>::unsort(Rank lo, Rank hi) {
+	T* V = _elem + lo;
+	for (Rank i = hi - lo; i > 0; i--)
+		swap(V[i - 1], V[rand() % i]);
+}
+template <typename T>
+Rank Vector<T>::find(T const& e, Rank lo, Rank hi) const {
+	while ((lo < hi--) && (e != _elem[hi]));
+	return hi;
+}
