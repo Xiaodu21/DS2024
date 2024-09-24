@@ -161,4 +161,93 @@ template <typename T> int Vector<T>::uniquify() {
 	_size = ++i; shrink();
 	return j - i;
 }
+template <typename T>
+Rank Vector<T>::search(T const& e, Rank lo, Rank hi) const {
+	return (rand() % 2) ?
+		binSearch(_elem, e, lo, hi) : fibSearch(_elem, e, lo, hi);
+}
+//二分查找版本A
+template <typename T> static Rank binSearch(T* A, T const& e, Rank lo, Rank hi) {
+	while (lo < hi) {
+		Rank mi = (lo + hi) >> 1;
+		if (e < A[mi]) hi = mi;
+		else if (A[mi] < e) lo = mi + 1;
+		else              return mi;
+	}
+	return -1;
+}
+#include "..\fibonacci\Fib.h"
+template <typename T> static Rank fibsearch(T* A, T const& e, Rank lo, Rank hi) {
+	Fib fib(hi - lo);
+	while (lo < hi) {
+		while (hi - lo < fib.get()) fib.prev();
+		Rank mi = lo + fib.get() - 1;
+		if (e < A[mi]) hi = mi;
+		else if (A[mi] < e) lo = mi + 1;
+		else              return mi;
+	}
+	return -1;
+}
+//二分查找B版本
+template <typename T> static Rank binSearch(T* A, T const& e, Rank lo, Rank hi) {
+	while (1 < hi - lo) {
+		Rank mi = (lo + hi) >> 1;
+		(e < A[mi]) ? hi = mi : lo = mi;
+	}
+	return (e == A[lo]) ? lo : -1;
+}
+//二分查找C版本
+template <typename T> static Rank binSearch(T* A, T const& e, Rank lo, Rank hi) {
+	while (lo < hi) {
+		Rank mi = (lo + hi) >> 1;
+		(e < A[mi]) ? hi = mi : lo = mi + 1;
+	}
+	return --lo;
+}
+//向量排序接口
+template <typename T> void Vector<T>::sort(Rank lo, Rank hi) {
+	switch (rand() % 5) {
+	case 1: bubbleSort(lo, hi);break;
+	case 2: selectionSort(lo, hi);break;
+	case 3: mergeSort(lo, hi);break;
+	case 4: heapSort(lo, hi);break;
+	default: quickSort(lo, hi);break;
+	}
+}
+template <typename T>
+void Vector<T>::bubbleSort ( Rank lo, Rank hi )
+{
+	while (!bubble(lo, hi--));
+}
+//扫描交换
+template <typename T> bool Vector<T>::bubble(Rank lo, Rank hi) {
+	bool sorted = true;
+	while ( ++lo < hi )
+		if (_elem[lo - 1] > _elem[lo]) {
+			sorted = false;
+			swap(_elem[lo - 1], _elem[lo]);
+		}
+	return sorted;
+}
+template <typename T>
+void Vector<T>::mergeSort(Rank lo, Rank hi) {
+	if (hi - lo < 2) return;
+	int mi = (lo + hi) / 2;
+	mergeSort(lo, mi); mergeSort(mi, hi);
+	merge(lo, mi, hi);
+}
+template <typename T>
+void Vector<T>::merge(Rank lo, Rank mi, Rank hi) {
+	T* A = _elem + lo;
+	int lb = mi - lo; T* B = new T[lb];
+	for (Rank i = 0; i < lb; B[i] = A[i++]);
+	int lc = hi - mi; T* C = _elem + mi;
+	for (Rank i = 0, j = 0, k = 0; (j < lb) || (k < lc); ) {
+		if ( (j < lb) && (!(k < lc) || (B[j] <= C[k]))) A[i++] = B[i++];
+		if ( (k < lc) && (!(j < lb) || (C[k] < B[j]))) A[i++] = B[i++];
+	}
+	delete[] B;
+}
+
+
 
