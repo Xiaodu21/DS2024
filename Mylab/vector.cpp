@@ -248,6 +248,6 @@ void Vector<T>::merge(Rank lo, Rank mi, Rank hi) {
 	}
 	delete[] B;
 }
-
+void Vector<T>::
 
 
