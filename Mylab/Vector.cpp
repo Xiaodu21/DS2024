@@ -4,13 +4,13 @@ typedef int Rank;
 template <typename T> class Vector {
 protected:
 	Rank _size; int _capacity; T* _elem;
-	void copyFrom(T const* A, Rank lo, Rank hi );
+	void copyFrom(T const* A, Rank lo, Rank hi);
 	void expand();
 	void shrink();
-	bool bubble ( Rank lo, Rank hi );
-	void bubbleSort ( Rank lo, Rank hi );
-	Rank max ( Rank lo, Rank hi );
-	void selectionSort( Rank lo, Rank hi );
+	bool bubble(Rank lo, Rank hi);
+	void bubbleSort(Rank lo, Rank hi);
+	Rank max(Rank lo, Rank hi);
+	void selectionSort(Rank lo, Rank hi);
 	void merge(Rank lo, Rank mi, Rank hi);
 	void mergeSort(Rank lo, Rank hi);
 	Rank partition(Rank lo, Rank hi);
@@ -22,7 +22,7 @@ public:
 		_elem = new T[_capacity = c];
 		for (_size = 0; _size < s; _elem[_size++] = v);
 	}
-	Vector(T const* A, Rank n) { copyFrom(A, 0, n);}
+	Vector(T const* A, Rank n) { copyFrom(A, 0, n); }
 	Vector(T const* A, Rank lo, Rank hi) { copyFrom(A, lo, hi); }
 	Vector(Vector<T> const& V) { copyFrom(V._elem, 0, V._size); }
 	Vector(Vector<T> const& V, Rank lo, Rank hi) { copyFrom(V._elem, lo, hi); }
@@ -51,7 +51,7 @@ public:
 	int uniquify();
 	void traverse(void (*) (&T));
 	template <typename VST> void traverse(VST&);
-}; 
+};
 template <typename T>
 void Vector<T>::copyFrom(T const* A, Rank lo, Rank hi) {
 	_elem = new T[_capacity = 2 * (hi - lo)];size = 0;
@@ -137,7 +137,7 @@ template <typename T> struct Increase
 	virtual void operateor() (T& e) { e++ }
 };
 
-template <typename T> void increase ( Vector <T> & V )
+template <typename T> void increase(Vector <T>& V)
 {
 	V.traverse(Increase<T>());
 }
@@ -215,14 +215,14 @@ template <typename T> void Vector<T>::sort(Rank lo, Rank hi) {
 	}
 }
 template <typename T>
-void Vector<T>::bubbleSort ( Rank lo, Rank hi )
+void Vector<T>::bubbleSort(Rank lo, Rank hi)
 {
 	while (!bubble(lo, hi--));
 }
 //扫描交换
 template <typename T> bool Vector<T>::bubble(Rank lo, Rank hi) {
 	bool sorted = true;
-	while ( ++lo < hi )
+	while (++lo < hi)
 		if (_elem[lo - 1] > _elem[lo]) {
 			sorted = false;
 			swap(_elem[lo - 1], _elem[lo]);
@@ -243,12 +243,8 @@ void Vector<T>::merge(Rank lo, Rank mi, Rank hi) {
 	for (Rank i = 0; i < lb; B[i] = A[i++]);
 	int lc = hi - mi; T* C = _elem + mi;
 	for (Rank i = 0, j = 0, k = 0; (j < lb) || (k < lc); ) {
-		if ( (j < lb) && (!(k < lc) || (B[j] <= C[k]))) A[i++] = B[i++];
-		if ( (k < lc) && (!(j < lb) || (C[k] < B[j]))) A[i++] = B[i++];
+		if ((j < lb) && (!(k < lc) || (B[j] <= C[k]))) A[i++] = B[i++];
+		if ((k < lc) && (!(j < lb) || (C[k] < B[j]))) A[i++] = B[i++];
 	}
 	delete[] B;
 }
-//第一次写
-
-
-
