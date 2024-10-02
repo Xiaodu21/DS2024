@@ -1,8 +1,9 @@
 typedef int Rank;
 #define DEFAULT_CAPACITY  3
+#include <algorithm>
 
 template <typename T> class Vector {
-protected:
+public:
 	Rank _size; int _capacity; T* _elem;
 	void copyFrom(T const* A, Rank lo, Rank hi);
 	void expand();
@@ -39,7 +40,7 @@ public:
 	Rank search(T const& e, Rank lo, Rank hi) const;
 	T& operator[] (Rank r) const;
 	Vector<T>& operator= (Vector<T> const&);
-	int remove(Rank r);
+	T remove(Rank r);
 	int remove(Rank lo, Rank hi);
 	Rank insert(Rank r, T const& e);
 	Rank insert(T const& e) { return insert(_size, e); }
@@ -67,7 +68,7 @@ template <typename T> void Vector<T>::expand() {
 	if (_size < _capacity) return;
 	if (_capacity < DEFAULT_CAPACITY) _capacity = DEFAULT_CAPACITY;
 	T* oldElem = _elem; _elem = new T[_capacity <<= 1];
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < size(); i++)
 		_elem[i] = oldElem[i];
 	delete[] oldElem;
 }
@@ -89,7 +90,7 @@ template <typename T> void permute(Vector<T>& V) {
 template <typename T> void Vector<T>::unsort(Rank lo, Rank hi) {
 	T* V = _elem + lo;
 	for (Rank i = hi - lo; i > 0; i--)
-		swap(V[i - 1], V[rand() % i]);
+		std::swap(V[i - 1], V[rand() % i]);
 }
 template <typename T>
 Rank Vector<T>::find(T const& e, Rank lo, Rank hi) const {
@@ -110,7 +111,7 @@ template <typename T> int Vector<T>::remove(Rank lo, Rank hi) {
 	shrink();
 	return hi - lo;
 }
-template <typename T> int Vector<T>::remove(Rank r) {
+template <typename T>T Vector<T>::remove(Rank r) {
 	T e = _elem[r];
 	remove(r, r + 1);
 	return e;
@@ -200,7 +201,7 @@ void Vector<T>::merge(Rank lo, Rank mi, Rank hi) {
 	for (Rank i = 0; i < lb; B[i] = A[i++]);
 	int lc = hi - mi; T* C = _elem + mi;
 	for (Rank i = 0, j = 0, k = 0; (j < lb) || (k < lc); ) {
-		if ((j < lb) && (!(k < lc) || (B[j] <= C[k]))) A[i++] = B[i++];
+		if ((j < lb) && (!(k < lc) || (B[j] < C[k]))) A[i++] = B[i++];
 		if ((k < lc) && (!(j < lb) || (C[k] < B[j]))) A[i++] = B[i++];
 	}
 	delete[] B;

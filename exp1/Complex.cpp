@@ -12,3 +12,6 @@ bool Complex::operator<(const Complex& other) const {
 	double otherModulus = other.modulus();  // 保存其他对象的模
 	return thisModulus < otherModulus || (thisModulus == otherModulus && real < other.real);  // 使用逻辑或
 }
+bool Complex::operator!=(const Complex& other) const {
+	return (real != other.real) || (imaginary != other.imaginary);
+}
