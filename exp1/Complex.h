@@ -1,4 +1,3 @@
-#ifndef COMPLEX_H
 #define COMPLEX_H
 class Complex {
 public:
@@ -7,6 +6,6 @@ public:
 
 	Complex(double r = 0, double i = 0);
 	double modulus() const;
-	double operator==(const Complex& other) const;
-	double operator<(const Complex& other) const;
-};#pragma once
+	bool operator==(const Complex& other) const;
+	bool operator<(const Complex& other) const;
+};

@@ -39,7 +39,7 @@ public:
 	Rank search(T const& e, Rank lo, Rank hi) const;
 	T& operator[] (Rank r) const;
 	Vector<T>& operator= (Vector<T> const&);
-	T remove(Rank r);
+	int remove(Rank r);
 	int remove(Rank lo, Rank hi);
 	Rank insert(Rank r, T const& e);
 	Rank insert(T const& e) { return insert(_size, e); }
@@ -49,7 +49,7 @@ public:
 	void unsort() { unsort(0, _size); }
 	int deduplicate();
 	int uniquify();
-	void traverse(void (*) (&T));
+	void traverse(void (*func)(T&));
 	template <typename VST> void traverse(VST&);
 };
 template <typename T>
@@ -134,7 +134,7 @@ void Vector<T>::traverse(VST& visit)
 }
 template <typename T> struct Increase
 {
-	virtual void operateor() (T& e) { e++ }
+	virtual void operateor (T& e) { e++; }
 };
 
 template <typename T> void increase(Vector <T>& V)
@@ -147,64 +147,21 @@ template <typename T> int Vector<T>::diosordered() const {
 		if (_elem[i - 1] > _elem[i]) n++;
 	return n;
 }
-template <typename T> int Vector(T)::uniquify() {
+template <typename T> int Vector<T> ::uniquify() {
 	int oldSize = _size; int i = 1;
 	while (i < _size)
 		_elem[i - 1] == _elem[i] ? remove(i) : i++;
 	return oldSize - _size;
 }
-template <typename T> int Vector<T>::uniquify() {
-	Rank i = 0, j = 0;
-	while (++j < _size)
-		if (_elem[i] != _elem[j])
-			_elem[++i] = _elem[j];
-	_size = ++i; shrink();
-	return j - i;
-}
+
 template <typename T>
 Rank Vector<T>::search(T const& e, Rank lo, Rank hi) const {
 	return (rand() % 2) ?
 		binSearch(_elem, e, lo, hi) : fibSearch(_elem, e, lo, hi);
 }
-//¶þ·Ö²éÕÒ°æ±¾A
-template <typename T> static Rank binSearch(T* A, T const& e, Rank lo, Rank hi) {
-	while (lo < hi) {
-		Rank mi = (lo + hi) >> 1;
-		if (e < A[mi]) hi = mi;
-		else if (A[mi] < e) lo = mi + 1;
-		else              return mi;
-	}
-	return -1;
-}
-#include "..\fibonacci\Fib.h"
-template <typename T> static Rank fibsearch(T* A, T const& e, Rank lo, Rank hi) {
-	Fib fib(hi - lo);
-	while (lo < hi) {
-		while (hi - lo < fib.get()) fib.prev();
-		Rank mi = lo + fib.get() - 1;
-		if (e < A[mi]) hi = mi;
-		else if (A[mi] < e) lo = mi + 1;
-		else              return mi;
-	}
-	return -1;
-}
-//¶þ·Ö²éÕÒB°æ±¾
-template <typename T> static Rank binSearch(T* A, T const& e, Rank lo, Rank hi) {
-	while (1 < hi - lo) {
-		Rank mi = (lo + hi) >> 1;
-		(e < A[mi]) ? hi = mi : lo = mi;
-	}
-	return (e == A[lo]) ? lo : -1;
-}
-//¶þ·Ö²éÕÒC°æ±¾
-template <typename T> static Rank binSearch(T* A, T const& e, Rank lo, Rank hi) {
-	while (lo < hi) {
-		Rank mi = (lo + hi) >> 1;
-		(e < A[mi]) ? hi = mi : lo = mi + 1;
-	}
-	return --lo;
-}
-//ÏòÁ¿ÅÅÐò½Ó¿Ú
+//ï¿½ï¿½ï¿½Ö²ï¿½ï¿½Ò°æ±¾A
+
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
 template <typename T> void Vector<T>::sort(Rank lo, Rank hi) {
 	switch (rand() % 5) {
 	case 1: bubbleSort(lo, hi);break;
@@ -219,7 +176,7 @@ void Vector<T>::bubbleSort(Rank lo, Rank hi)
 {
 	while (!bubble(lo, hi--));
 }
-//É¨Ãè½»»»
+//É¨ï¿½è½»ï¿½ï¿½
 template <typename T> bool Vector<T>::bubble(Rank lo, Rank hi) {
 	bool sorted = true;
 	while (++lo < hi)
