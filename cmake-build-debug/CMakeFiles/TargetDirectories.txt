@@ -1,0 +1,3 @@
+E:/DS2024A/cmake-build-debug/CMakeFiles/DS2024A.dir
+E:/DS2024A/cmake-build-debug/CMakeFiles/edit_cache.dir
+E:/DS2024A/cmake-build-debug/CMakeFiles/rebuild_cache.dir
