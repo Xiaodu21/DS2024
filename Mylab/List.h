@@ -1,15 +1,5 @@
 typedef int Rank;
-#define ListNodePosi(T) ListNode<T>*
-
-template <typename T> struct ListNode {
-	T data; ListNodePosi(T) pred; ListNodePosi(T) succ;
-	ListNode() {}
-	ListNode(T e, ListNodePosi(T) p = NULL, ListNodePosi(T) s = NULL)
-		: data(e), pred(p), succ(s) {}
-	ListNodePosi(T) insertAsPred(T const& e);
-	ListNodePosi(T) insertAsSucc(T const& e);
-};
-#include "listNode.h"
+#include "../Mylab/ListNode.h"
 
 template <typename T> class List {
 
@@ -138,27 +128,27 @@ List<T>::List(List<T> const& L) { copyNodes(L.first(), L.size); }
 
 template <typename T>
 List<T>::List(List<T> const& L, int r, int n) { copyNodes(L[r], n); }
-//É¾³ý
+//É¾ï¿½ï¿½
 template <typename T> T List<T>::remove(ListNodePosi(T) p) {
 	T e = p->data;
 	p->pred->succ = p->succ;p->succ->pred = p->pred;
 	delete p;size--;
 	return e;
 }
-//Îö¹¹º¯Êý
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 template <typename T> List<T>::~List()
 {
 	clear();
 	delete header;
 	delete trailer;
 }
-//ÁÐ±íÇå¿Õ·½·¨
+//ï¿½Ð±ï¿½ï¿½ï¿½Õ·ï¿½ï¿½ï¿½
 template <typename T> int List<T>::clear() {
 	int oldSize = _size;
 	while (0 < _size) remove(header->succ);
 	return oldSize;
 }
-//Î¨Ò»»¯
+//Î¨Ò»ï¿½ï¿½
 template <typename T> int List<T>::deduplicate() {
 	if (_size < 2) return 0;
 	int oldSize = _size;
@@ -169,17 +159,17 @@ template <typename T> int List<T>::deduplicate() {
 	}
 	return oldSize - _size;
 }
-//±éÀú
-template <typename T> void List<T>::traverse(void (*visit) (T&))//½èÖúº¯ÊýÖ¸Õë±éÀú
+//ï¿½ï¿½ï¿½ï¿½
+template <typename T> void List<T>::traverse(void (*visit) (T&))//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½
 {
 	for (ListNodePosi(T) p = header->succ; p != trailer; p = p->succ) visit(p->data);
 }
 template <typename T> template <typename VST>
 void List<T>::traverse(VST& visit)
 {
-	for (LisrNodePosi(T) p = header->succ; p != trailer; p = p->succ) visit(p->data);//½èÖúº¯Êý¶ÔÏó»úÖÆ±éÀú
+	for (LisrNodePosi(T) p = header->succ; p != trailer; p = p->succ) visit(p->data);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ±ï¿½ï¿½ï¿½
 }
-//Î¨Ò»»¯
+//Î¨Ò»ï¿½ï¿½
 template <typename T> int List<T>::uniquify() {
 	if (_size < 2) return 0;
 	int oldSize = _size;
@@ -189,7 +179,7 @@ template <typename T> int List<T>::uniquify() {
 		else remove(q);
 	return oldSize - _size;
 }
-//²éÕÒ
+//ï¿½ï¿½ï¿½ï¿½
 template <typename T>
 ListNodePosi(T) List<T>::search(T const& e, int n, ListNodePosi(T) p) const {
 	// assert: 0 <= n <= rank(p) < _size
@@ -197,16 +187,16 @@ ListNodePosi(T) List<T>::search(T const& e, int n, ListNodePosi(T) p) const {
 		if (((p = p->pred)->data) <= e) break;
 	return p;
 }
-//ÅÅÐòÆ÷
-//ÓÐÐòÁÐ±í»ùÓÚÅÅÐòµÄ¹¹Ôì·½·¨
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ì·½ï¿½ï¿½
 template <typename T> void List<T>::sort(ListNodePosi(T) p, int n) {
 	switch (rand() % 3) {
-	case 1: insertionSort(p, n); break;//²åÈëÅÅÐò
-	case 2: insertionSort(p, n); break;//Ñ¡ÔñÅÅÐò
-	default: mergeSort(p, n); break;//¹é²¢ÅÅÐò
+	case 1: insertionSort(p, n); break;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	case 2: insertionSort(p, n); break;//Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	default: mergeSort(p, n); break;//ï¿½é²¢ï¿½ï¿½ï¿½ï¿½
 	}
 }
-//²åÈëÅÅÐò
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 template <typename T>
 void List<T>::insertionSort(ListNodePosi(T) p, int n) {
 	for (int r = 0; r < n; r++) {
@@ -214,7 +204,7 @@ void List<T>::insertionSort(ListNodePosi(T) p, int n) {
 		p = p->succ;remove(p->pred);
 	}
 }
-//Ñ¡ÔñÅÅÐò
+//Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 template <typename T>
 void List<T>::selectionSort(ListNodePosi(T) p, int n) {
 	ListNodePosi(T) head = p->pred;ListNodePosi(T) tail = p;
@@ -225,7 +215,7 @@ void List<T>::selectionSort(ListNodePosi(T) p, int n) {
 		tail = tail->pred;n--;
 	}
 }
-//ÁÐ±í×î´ó½ÚµãµÄ¶¨Î»
+//ï¿½Ð±ï¿½ï¿½ï¿½ï¿½Úµï¿½Ä¶ï¿½Î»
 template <typename T>
 ListNodePosi(T) List<T>::selectMax(ListNodePosi(T) p, int n) {
 	ListNodePosi(T) max = p;
@@ -234,8 +224,8 @@ ListNodePosi(T) List<T>::selectMax(ListNodePosi(T) p, int n) {
 			max = cur;
 	return max;
 }
-//¹é²¢ÅÅÐò  
-//ÓÐÐòÁÐ±íµÄ¶þÂ·¹é²¢
+//ï¿½é²¢ï¿½ï¿½ï¿½ï¿½  
+//ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½Ä¶ï¿½Â·ï¿½é²¢
 template <typename T>
 void List<T>::merge(ListNodePosi(T)& p, int n, List<T>& L, ListNodePosi(T) q, int m) {
 	ListNodePosi(T) pp = p->data;
@@ -252,7 +242,7 @@ void List<T>::merge(ListNodePosi(T)& p, int n, List<T>& L, ListNodePosi(T) q, in
 		}
 	p = pp->succ;
 }
-//·ÖÖÎ²ßÂÔ ÁÐ±íµÄ¶þÂ·¹é²¢
+//ï¿½ï¿½ï¿½Î²ï¿½ï¿½ï¿½ ï¿½Ð±ï¿½Ä¶ï¿½Â·ï¿½é²¢
 template <typename T>
 void List<T>::mergeSort(ListNodePosi(T)& p, int n) {
 	if (n < 2) return;
