@@ -1,6 +1,6 @@
 typedef int Rank;
+include <cstddef>
 #define ListNodePosi(T) ListNode<T>*
-
 template <typename T> struct ListNode {
 	T data; ListNodePosi(T) pred; ListNodePosi(T) succ;
 	ListNode() {}
@@ -14,3 +14,4 @@ template <typename T> struct ListNode {
 #define DS2024A_LISTNODE_H
 
 #endif //DS2024A_LISTNODE_H
+//xiaodu

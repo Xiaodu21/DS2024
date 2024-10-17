@@ -1,79 +1,57 @@
 #include "../Mylab/Vector.h"
-template <typename T> class Stack : public Vector<T> {
+#include <iostream>
+
+using namespace std;
+template <typename T>
+class Stack {
+private:
+    T* stackArray;  // åŠ¨æ€æ•°ç»„æ¥æ¨¡æ‹Ÿæ ˆ
+    int topIndex;   // æ ˆé¡¶ç´¢å¼•
+    int capacity;   // æ ˆçš„å®¹é‡
+
 public:
-	void push(T const& e) { increase(size(), e); }
-	T pop() { return remove(size() - 1); }
-	T& top() { return (*this)[size() - 1]; }
-};
-//½øÖÆ×ª»¯Ëã·¨
-void convert(Stack<char>& S, __int64 n, int base) {
-	static char digit[]
-		= { '0', '1', '2', '3','4', '5', '6', '7', '8', '9', 'A','B','C', 'D', 'E', 'F' };
-	if (0 < n) {
-		S.push(digit[n % base]);
-		convert(S, n / base, base);
-	}
-}
-//½øÖÆ×ª»¯Ëã·¨(µü´ú°æ£©
-void convert(Stack<char>& S, __int64 n, int base) {
-	static char digit[]
-		= { '0', '1', '2', '3','4', '5', '6', '7', '8', '9', 'A','B','C', 'D', 'E', 'F' };
-	while (0 < n) {
-		int remainder = (int)(n % base);S.push(digit[remainder]);
-		n /= base;
-	}
-}
-//ÓÅÏÈ¼¶±í¸ñµÄ¶¨Òå
-#define N_OPTR 9 // ÔËËã·ûµÄÊıÄ¿
+    Stack(int cap = 10) : capacity(cap), topIndex(-1) {
+        stackArray = new T[capacity];
+    }
 
-// ÔËËã·ûÃ¶¾ÙÀàĞÍ¶¨Òå£º¼Ó¡¢¼õ¡¢³Ë¡¢³ı¡¢³Ë·½¡¢½×³Ë¡¢×óÀ¨ºÅ¡¢ÓÒÀ¨ºÅ¡¢ÆğÊ¼·ûºÅÓëÖÕÖ¹·û
-typedef enum { ADD, SUB, MUL, DIV, POW, FAC, L_P, R_P, EOE } Operator;
-// ¼Ó¡¢¼õ¡¢³Ë¡¢³ı¡¢³Ë·½¡¢×óÀ¨ºÅ¡¢ÓÒÀ¨ºÅ¡¢ÆğÊ¼·ûºÅÓëÖÕÖ¹·û
+    ~Stack() {
+        delete[] stackArray;
+    }
 
-// ÔËËã·ûÓÅÏÈµÈ¼¶±í£ºÕ»¶¥ÔËËã·ûÓëµ±Ç°ÔËËã·ûÖ®¼äµÄÓÅÏÈ¹ØÏµ
-const char pri[N_OPTR][N_OPTR] = {
-	/*          +    -    *    /    ^    !    (    )    \0 */
-	/* + */  '>', '>', '<', '<', '<', '<', '<', '>', '>',
-	/* - */  '>', '>', '<', '<', '<', '<', '<', '>', '>',
-	/* * */  '>', '>', '>', '>', '<', '<', '<', '>', '>',
-	/* / */  '>', '>', '>', '>', '<', '<', '<', '>', '>',
-	/* ^ */  '>', '>', '>', '>', '>', '<', '<', '>', '>',
-	/* ! */  '>', '>', '>', '>', '>', '>', ' ', '>', '>',
-	/* ( */  '<', '<', '<', '<', '<', '<', '<', '=', ' ',
-	/* ) */  ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-	/* \0 */ '<', '<', '<', '<', '<', '<', '<', ' ', '='
+    // å…¥æ ˆæ“ä½œ
+    void push(T value) {
+        if (topIndex == capacity - 1) {
+            cout << "Stack overflow" << endl;
+            return;
+        }
+        stackArray[++topIndex] = value;
+    }
+
+    // å‡ºæ ˆæ“ä½œ
+    void pop() {
+        if (empty()) {
+            cout << "Stack underflow" << endl;
+            return;
+        }
+        topIndex--;
+    }
+
+    // è¿”å›æ ˆé¡¶å…ƒç´ 
+    T top() const {
+        if (empty()) {
+            throw runtime_error("Stack is empty");
+        }
+        return stackArray[topIndex];
+    }
+
+    // æ£€æŸ¥æ ˆæ˜¯å¦ä¸ºç©º
+    bool empty() const {
+        return topIndex == -1;
+    }
+
+    // è¿”å›æ ˆçš„å¤§å°
+    int size() const {
+        return topIndex + 1;
+    }
 };
-//ÇóÖµËã·¨
-float evalute(char* S, char*& RPN) {
-	Stack<float> opnd; Stack<char> optr;
-	optr.push('\0');
-	while (!optr.empty()) {
-		if (isdigit(*S)) {
-			readNumber(S, opnd); append(RPN, opnd.top());
-		}
-		else
-			switch (orderBetween(optr.top(), *S)) {
-			case '<':
-				optr.push(*S);S++;
-				break;
-			case '=':
-				optr.pop();S++;
-				break;
-			case '>': {
-				char op = optr.pop(); append(RPN, op);
-				if ('!' == op) {
-					float pOpnd = opnd.pop();
-					opnd.push(calcu(op, pOpnd));
-				}
-				else {
-					float pOpnd2 = opnd.pop(), pOpnd1 = opnd.pop;
-					opnd.push(calcu(pOpnd1, op, pOpnd2));
-				}
-				break;
-			}
-			default: exit(-1);
-			}
-	}
-	return opnd.pop;
-}
-#pragma once
+
