@@ -11,6 +11,7 @@ class HuffTree {
 public:
     BinTreeNode* root;
 
+    // 构造函数，生成哈夫曼树
     HuffTree(std::unordered_map<char, int>& frequencies) {
         auto cmp = [](BinTreeNode* a, BinTreeNode* b) { return a->freq > b->freq; };
         std::priority_queue<BinTreeNode*, std::vector<BinTreeNode*>, decltype(cmp)> pq(cmp);
@@ -30,6 +31,7 @@ public:
         root = pq.top();
     }
 
+    // 递归生成编码
     void generateCodes(BinTreeNode* node, std::string code, std::unordered_map<char, std::string>& huffCode) {
         if (!node) return;
         if (!node->left && !node->right) huffCode[node->ch] = code;

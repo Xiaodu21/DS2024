@@ -1,23 +1,23 @@
 #include "HuffCode.h"
-#include <iostream>
-#include <string>
 
 int main() {
-    // 需要编码的文本（你可以根据需要选择其他文本）
-    std::string text = "I have a dream that one day this nation will rise up and live out the true meaning of its creed.";
+    std::string filename = "E:\\DS2024A\\exp3\\I_have_a_dream.txt";  // 假设你保存了文章的原文为此文件
+    std::ifstream infile(filename);
+    if (!infile.is_open()) {
+        std::cerr << "Error: Cannot open the file " << filename << std::endl;
+        return 1;  // 退出程序
+    }
 
-    // 创建 HuffmanCoding 对象并对文本进行编码
-    HuffmanCoding huffman(text);
-    huffman.encode();
+    HuffmanCoding huffman(filename);  // 根据文件创建HuffmanCoding对象
+    huffman.encode();  // 执行哈夫曼编码
 
-    // 输出所有26个字母的哈夫曼编码
-    std::cout << "Huffman Codes for 26 letters:" << std::endl;
+    // 输出所有字母的编码
+    std::cout << "Huffman Codes for 26 Letters: " << std::endl;
     huffman.printLetterCodes();
 
-    std::cout << "\nEncoding 'dream':" << std::endl;
+    // 输出单词 "dream" 的哈夫曼编码
     std::string word = "dream";
-    std::string encodedWord = huffman.getCode(word);
-    std::cout << "dream: " << encodedWord << " " << std::endl;
+    std::cout << "Huffman encoding for word '" << word << "': " << huffman.getCode(word) << std::endl;
 
     return 0;
 }

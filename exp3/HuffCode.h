@@ -5,6 +5,8 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 class HuffmanCoding {
 public:
@@ -12,16 +14,21 @@ public:
     std::unordered_map<char, std::string> huffCode;
 
     // 构造函数，根据文本频率统计
-    HuffmanCoding(const std::string& text) {
+    HuffmanCoding(const std::string& filename) {
+        std::ifstream file(filename);
+        std::stringstream buffer;
+        buffer << file.rdbuf();  // 读取文件内容
+
+        std::string text = buffer.str();
         for (char ch : text) {
-            if (isalpha(ch)) frequencies[tolower(ch)]++;
+            if (isalpha(ch)) frequencies[tolower(ch)]++; // 统计字符频率
         }
     }
 
-    // 对文本进行哈夫曼编码
+    // 执行哈夫曼编码
     void encode() {
-        HuffTree huffTree(frequencies);
-        huffTree.generateCodes(huffTree.root, "", huffCode);
+        HuffTree huffTree(frequencies);  // 根据字符频率构造哈夫曼树
+        huffTree.generateCodes(huffTree.root, "", huffCode);  // 生成编码
     }
 
     // 获取单词的哈夫曼编码
@@ -33,7 +40,7 @@ public:
         return encoded;
     }
 
-    // 输出26个字母的编码
+    // 输出26个字母的哈夫曼编码
     void printLetterCodes() {
         for (char ch = 'a'; ch <= 'z'; ch++) {
             if (huffCode.find(ch) != huffCode.end()) {
@@ -46,7 +53,7 @@ public:
         }
     }
 
-    // 输出哈夫曼编码
+    // 输出所有的哈夫曼编码
     void printCodes() {
         for (auto& pair : huffCode) {
             std::cout << pair.first << ": ";
