@@ -1,54 +1,41 @@
-//
-// Created by lenovo on 2024/11/10.
-//
-
-#ifndef DS2024A_HUFFTREE_H
-#define DS2024A_HUFFTREE_H
-
-#endif //DS2024A_HUFFTREE_H
-
 #ifndef HUFFTREE_H
 #define HUFFTREE_H
 
-#include "BinTree.h"
+#include "Bintree.h"
 #include <unordered_map>
 #include <queue>
+#include <vector>
 #include <string>
 
-class HuffTree : public BinTree {
-private:
-    std::unordered_map<char, std::string> codes;
-
-    void generateCode(BinNode* node, const std::string& code) {
-        if (!node) return;
-        if (!node->left && !node->right)  // 叶节点
-            codes[node->data] = code;
-        generateCode(node->left, code + "0");
-        generateCode(node->right, code + "1");
-    }
-
+class HuffTree {
 public:
-    void buildTree(const std::unordered_map<char, int>& freq) {
-        auto cmp = [](BinNode* a, BinNode* b) { return a->weight > b->weight; };
-        std::priority_queue<BinNode*, std::vector<BinNode*>, decltype(cmp)> pq(cmp);
+    BinTreeNode* root;
 
-        for (const auto& [ch, w] : freq)
-            pq.push(new BinNode(ch, w));
+    HuffTree(std::unordered_map<char, int>& frequencies) {
+        auto cmp = [](BinTreeNode* a, BinTreeNode* b) { return a->freq > b->freq; };
+        std::priority_queue<BinTreeNode*, std::vector<BinTreeNode*>, decltype(cmp)> pq(cmp);
+
+        for (auto& pair : frequencies) {
+            pq.push(new BinTreeNode(pair.first, pair.second));
+        }
 
         while (pq.size() > 1) {
-            BinNode* left = pq.top(); pq.pop();
-            BinNode* right = pq.top(); pq.pop();
-            BinNode* parent = new BinNode('\0', left->weight + right->weight);
-            parent->left = left;
-            parent->right = right;
-            pq.push(parent);
+            BinTreeNode* left = pq.top(); pq.pop();
+            BinTreeNode* right = pq.top(); pq.pop();
+            BinTreeNode* node = new BinTreeNode('\0', left->freq + right->freq);
+            node->left = left;
+            node->right = right;
+            pq.push(node);
         }
         root = pq.top();
-        generateCode(root, "");
     }
 
-    const std::unordered_map<char, std::string>& getCodes() const { return codes; }
+    void generateCodes(BinTreeNode* node, std::string code, std::unordered_map<char, std::string>& huffCode) {
+        if (!node) return;
+        if (!node->left && !node->right) huffCode[node->ch] = code;
+        generateCodes(node->left, code + "0", huffCode);
+        generateCodes(node->right, code + "1", huffCode);
+    }
 };
 
-#endif // HUFFTREE_H
-
+#endif

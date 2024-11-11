@@ -3,30 +3,12 @@
 
 #include <iostream>
 
-class BinNode {
-public:
-    char data;
-    int weight;           // 权重，用于构建 Huffman 树
-    BinNode* left;
-    BinNode* right;
-
-    BinNode(char d, int w) : data(d), weight(w), left(nullptr), right(nullptr) {}
-};
-
-class BinTree {
-public:
-    BinNode* root;
-
-    BinTree() : root(nullptr) {}
-    virtual ~BinTree() { destroy(root); }
-
-    void destroy(BinNode* node) {
-        if (node) {
-            destroy(node->left);
-            destroy(node->right);
-            delete node;
-        }
-    }
+struct BinTreeNode {
+    char ch;
+    int freq;
+    BinTreeNode* left;
+    BinTreeNode* right;
+    BinTreeNode(char c, int f) : ch(c), freq(f), left(nullptr), right(nullptr) {}
 };
 
 #endif // BINTREE_H

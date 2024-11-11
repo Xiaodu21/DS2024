@@ -1,37 +1,23 @@
-#include "HuffTree.h"
 #include "HuffCode.h"
 #include <iostream>
-#include <unordered_map>
+#include <string>
 
 int main() {
-    std::string text = "i have a dream";  // 示例文本
+    // 需要编码的文本（你可以根据需要选择其他文本）
+    std::string text = "I have a dream that one day this nation will rise up and live out the true meaning of its creed.";
 
-    // 统计字母频率（不区分大小写）
-    std::unordered_map<char, int> freq;
-    for (char ch : text) {
-        if (isalpha(ch)) {
-            ch = tolower(ch);
-            freq[ch]++;
-        }
-    }
+    // 创建 HuffmanCoding 对象并对文本进行编码
+    HuffmanCoding huffman(text);
+    huffman.encode();
 
-    // 构建 Huffman 树并生成编码
-    HuffTree huffTree;
-    huffTree.buildTree(freq);
-    const auto& codes = huffTree.getCodes();
+    // 输出所有26个字母的哈夫曼编码
+    std::cout << "Huffman Codes for 26 letters:" << std::endl;
+    huffman.printLetterCodes();
 
-    // 打印每个字符的编码
-    std::cout << "Huffman Codes:\n";
-    for (const auto& [ch, code] : codes) {
-        std::cout << ch << ": " << code << "\n";
-    }
-
-    // 对示例文本编码
-    HuffCode huffCode(codes, "dream");
-    std::cout << "\nEncoded 'dream' as binary string: " << huffCode.getBinaryString() << "\n";
+    std::cout << "\nEncoding 'dream':" << std::endl;
+    std::string word = "dream";
+    std::string encodedWord = huffman.getCode(word);
+    std::cout << "dream: " << encodedWord << " " << std::endl;
 
     return 0;
 }
-//
-// Created by lenovo on 2024/11/10.
-//
